@@ -1,0 +1,21 @@
+color status    green white
+
+set folder      = "~/Mail/filippo.panessa@uzh.ch"
+
+set from        = "filippo.panessa@uzh.ch"
+set realname    = "Filippo Panessa"
+set spoolfile   = "=Inbox"
+set postponed   = "=Drafts"
+set signature   = ~/.mutt/ch.uzh/signature
+set sendmail    = "/usr/bin/msmtp -a ch.uzh"
+
+set header_cache = ~/.mutt/ch.uzh/cache/headers            
+set message_cachedir = ~/.mutt/ch.uzh/cache/bodies         
+set certificate_file = ~/.mutt/ch.uzh/certificates         
+
+folder-hook !(Trash|Spam) 'macro index,pager d "<save-message>=Trash"'
+
+lists           Team Sysadmin matplotlib-users
+subscribe       matplotlib-users
+
+source          ~/.mutt/ch.uzh/mailboxes

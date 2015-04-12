@@ -1,0 +1,29 @@
+text/html;                      elinks -dump -force-html %s; needsterminal; copiousoutput;
+application/pdf;		        acroread -openInNewInstance %s; test=test -n "$DISPLAY"
+# The following Microsoft application MIME attachments are viewed from
+# the attachment menu using QuickView Plus for UNIX. 
+#
+application/msword;             mutt_bgrun qvpview %s; test=RunningX
+application/msword;             word2text %s; copiousoutput
+application/vnd.msword;         mutt_bgrun qvpview %s; test=RunningX
+application/vnd.msword;         word2text %s; copiousoutput
+#
+application/excel;              mutt_bgrun qvpview %s; test=RunningX
+application/excel;              excel2text %s; copiousoutput
+application/msexcel;            mutt_bgrun qvpview %s; test=RunningX
+application/msexcel;            excel2text %s; copiousoutput
+application/vnd.ms-excel;       mutt_bgrun qvpview %s; test=RunningX
+application/vnd.ms-excel;       excel2text %s; copiousoutput
+application/x-excel;            mutt_bgrun qvpview %s; test=RunningX
+application/x-excel;            excel2text %s; copiousoutput
+application/x-msexcel;          mutt_bgrun qvpview %s; test=RunningX
+application/x-msexcel;          excel2text %s; copiousoutput
+application/ms-Excel;           mutt_bgrun qvpview %s; test=RunningX
+application/ms-Excel;           excel2text %s; copiousoutput
+#
+application/vnd.ms-powerpoint;  mutt_bgrun qvpview %s; test=RunningX
+application/vnd.ms-powerpoint;  ppt2text %s; copiousoutput
+application/x-mspowerpoint;     mutt_bgrun qvpview %s; test=RunningX
+application/x-mspowerpoint;     ppt2text %s; copiousoutput
+application/ppt;                mutt_bgrun qvpview %s; test=RunningX
+application/ppt;                ppt2text %s; copiousoutput

@@ -1,0 +1,232 @@
+########################################################################
+# who you are - settings
+###
+
+# Folder hooks
+folder-hook 'com.gmail' 'source ~/.mutt/com.gmail/muttrc'
+folder-hook 'ch.uzh' 'source ~/.mutt/ch.uzh/muttrc'
+
+# Macros for switching accounts
+macro index <f2> '<sync-mailbox><enter-command>source ~/.mutt/com.gmail/muttrc<enter><change-folder>!<enter>'
+macro index <f3> '<sync-mailbox><enter-command>source ~/.mutt/ch.uzh/muttrc<enter><change-folder>!<enter>'
+
+# Default account
+source ~/.mutt/com.gmail/muttrc
+
+set mailcap_path	    = ~/.mutt/mailcap       # entries for filetypes
+set tmpdir	            = ~/.mutt/temp          # where to keep temp files
+
+set use_from		    = yes
+set envelope_from	    = yes
+set rfc2047_parameters	= yes # encode =?iso-8858....?= filenames
+ 
+set pipe_decode		    = yes # encode stuff to urlview (to help...)
+ 
+#####################################################################
+# folder/mailboxes settings
+###
+ 
+set mbox_type		    = Maildir 
+
+set read_inc		    = 100
+set keep_flagged	    = yes  #don't move esc-f to $mbox from spool
+#set reply_self=yes     #use the reply-to: even on 'self-mail' but failure..often
+ 
+# addressbook - email - alias settings
+###
+ 
+set alias_file		    = ~/.mutt/aliases      # add the Aliases here
+set sort_alias		    = alias                # sort by alias ( or address, unsorted)
+set reverse_alias	    = yes
+source $alias_file
+
+set query_command       = "abook --mutt-query '%s'"  # address book
+ 
+ 
+#####################################################################
+# how to check for new mails
+###
+ 
+set timeout		        = 5 # press artificially a key after 10 seconds
+set mail_check		    = 5 # mutt checks for new mails on every keystrokes
+                            # but not more often then once in 3 seconds
+set beep_new                # beep on new messages in the mailboxes
+ 
+#####################################################################
+# how to edit messages
+###
+ 
+set editor              = "vim -c 'set tw=70 et' '+/^$' "
+set edit_headers            # put headers in editor when composing messages
+                            # additioally I have a some setting in vim for
+                            # my convenience (lazyness):
+# autocmd BufNewFile,BufRead /tmp/mutt-* set filetype=mail
+# au FileType mail set tw=64 autoindent expandtab formatoptions=tcqn
+# au FileType mail set list listchars=tab:»·,trail:·
+# au FileType mail set comments=nb:>
+# au FileType mail vmap D dO[...]^[
+# "I can delete text bloxks with D, it gets replaced by [...] then
+# au FileType mail silent normal /--\s*$^MO^[gg/^$^Mj
+# "the last line brings the curser to where I can start typing
+# "for boxes around text, I pipe text through the boxes program with 
+# "convenient bindings in vim e.g.
+# map <LEADER>b2 :!boxes  -d ca--tlb-n<CR>  (ca--tlb-n is a design by my own so)
+
+#####################################################################
+# miscellous settings
+###
+
+set markers          # mark wrapped lines of text in the pager with a +
+set smart_wrap       # Don't wrap mid-word
+set pager_context=5  # Retain 5 lines of previous page when scrolling.
+set status_on_top    # Status bar on top.
+push <show-version>  # Shows mutt version at startup
+
+set crypt_autosign=no
+set pgp_auto_decode = yes
+set pgp_autoinline = no
+set pgp_check_exit = yes
+set pgp_clearsign_command = "gpg --no-verbose --batch --output - --passphrase-fd 0 --armor --textmode --clearsign %?a?-u %a? %f"
+set pgp_decode_command = "gpg %?p?--passphrase-fd 0? --no-verbose --batch --output - %f"
+set pgp_decrypt_command = "gpg --passphrase-fd 0 --no-verbose --batch --output - %f"
+set pgp_encrypt_only_command = "pgpewrap gpg -v --batch --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+set pgp_encrypt_sign_command = "pgpewrap gpg --passphrase-fd 0 -v --batch --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+set pgp_entry_format = '%4n %t%f %4l/0x%k %-4a %2c %u'
+set pgp_export_command = "gpg --no-verbose --export --armor %r"
+set pgp_getkeys_command = "gpg --recv-keys %r > /dev/null 2>&1"
+set pgp_good_sign = ''
+set pgp_ignore_subkeys = yes
+set pgp_import_command = "gpg --no-verbose --import -v %f"
+set pgp_list_pubring_command = "gpg --no-verbose --batc --with-colons --list-keys %r"
+set pgp_list_secring_command = "gpg --no-verbose --batch --with-colons --list-secret-keys %r"
+set pgp_long_ids = no
+set pgp_mime_auto = ask-yes
+set pgp_replyinline = no
+set pgp_retainable_sigs = no
+set pgp_show_unusable = yes
+set pgp_sign_as=0x59D90F4D
+set pgp_sign_command = "gpg --no-verbose --batch --output - --passphrase-fd 0 --armor --detach-sign --textmode %?a?-u %a? %f"
+set pgp_sort_keys = 'address'
+set pgp_strict_enc = yes
+set pgp_timeout = '9999'
+set pgp_use_gpg_agent = no
+set pgp_verify_command = "gpg --no-verbose --batch --output - --verify %s %f"
+set pgp_verify_key_command = "gpg --no-verbose --batch --fingerprint --check-sigs $r"
+ 
+#####################################################################
+# how mutt presents the list of the messages
+###
+ 
+#for possible values, see manual:  3.259.  sort
+set sort = threads            # sorting the mails in threads in index (mails-list-view)
+set sort_aux = reverse-date   # and the thread themselves reverse-date
+                            # with o or O you can change that instantly
+                            #
+#####################################################################
+# how mutt presents the things in browser
+# (where you can see all folders/files on file-system)
+###
+ 
+set sort_browser            = alpha      # is the default I think, but anyway
+ 
+#####################################################################
+# how mutt presents a particular message
+###
+ 
+hdr_order Date: From: User-Agent: X-Mailer \
+          To: Cc: Reply-To: Subject:
+ignore *
+unignore Date: From: User-Agent: X-Mailer  \
+         To: Cc: Reply-To: Subject:
+ 
+alternative_order text/html text/enriched text/plain
+                         # order of prefered mime types if there's a choice
+                         # I prefer text/html before text/plain
+                         # auto_view'ed (dumped through elinks) (see below)
+                         # (I prefer plain messages , but when there is an
+                         # html too attached on the same mail, that's most of
+                         # the time more interesting, since the text/plain just
+                         # tells, I shall get a modern mail-client or however)
+
+auto_view text/html      # text/enriched and text/plain support are builtins
+                         # how to auto_view text/html takes mutt from  mailcap files:
+                         # ~/.mailcap  then /etc/mailcap or so
+                         # (settings with 'needsterminal' option or so)
+                         # I have in my ~/.mailcap for that purpose:
+                         # text/html; elinks -dump -force-html %s; needsterminal; copiousoutput;
+
+#####################################################################
+# other user interface settings
+###
+
+# Pager View Options ---------------------------------
+set pager_index_lines = 10 # number of index lines to show
+set pager_context = 3      # number of context lines to show
+set pager_stop             # don't go to next message automatically
+set menu_scroll            # scroll in menus
+set tilde                  # show tildes like in vim
+unset markers              # no ugly plus signs
+
+set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+alternative_order text/plain text/enriched text/html
+
+#####################################################################
+# ask or do not ask, or what is the default -  settings
+###
+
+set bounce = yes
+set help = yes
+set postpone = ask-yes         # ask for postponing when doing an Abort.
+set print = ask-yes            # ask whether you really want to print.
+set quit = yes
+set delete = yes               # ask for confirmation when deleting messages?
+set include = yes              # quote message, when replying
+set abort_nosubject = no       # Abort, if message has no subject.
+set reply_to = ask-yes         # Use or ignore Reply-To.
+set recall = no                # don't ask for using postponed message.
+set abort_unmodified = no      # Abort, if message wasn't edited.
+set honor_followup_to = ask-yes  # Ask whether to honor Mail-Followup-To header.
+set mime_forward=ask-no        # use MIME when forwarding mails.
+set mime_forward_rest=ask-no   # forward attachments w/o autoview from attmenu
+set pager_stop                 # stay at the current mail when page-down'ing
+
+ 
+#####################################################################
+# bindings / macros for your convenience
+###
+
+# Sidebar Navigation ---------------------------------
+bind index CP sidebar-prev
+bind index CN sidebar-next
+bind index CO sidebar-open
+bind pager CP sidebar-prev
+bind pager CN sidebar-next
+bind pager CO sidebar-open
+macro index b '<enter-command>toggle sidebar_visible<enter>'
+macro pager b '<enter-command>toggle sidebar_visible<enter>'
+bind index B bounce-message
+ 
+# message-hook '!(~g|~G) ~b"^-----BEGIN\ PGP\ (SIGNED\ )?MESSAGE"' "exec check-traditional-pgp"
+ 
+#####################################################################
+# colors
+###
+
+source ~/.mutt/colors
+
+# Sidebar Patch --------------------------------------
+set sidebar_visible = yes
+set sidebar_width   = 24
+color sidebar_new yellow default
+
+# Status Bar -----------------------------------------
+set status_chars  = " *%A"
+set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+
+
+# Header Options -------------------------------------
+ignore *                                # ignore all headers
+unignore from: to: cc: date: subject:   # show only these
+unhdr_order *                           # some distros order things by default
+hdr_order from: to: cc: date: subject:  # and in this order
+

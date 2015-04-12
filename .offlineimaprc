@@ -1,0 +1,122 @@
+##################################################
+# General definitions
+##################################################
+
+[general]
+
+# This variable specifies which accounts are defined.  Separate them
+# with commas.  Account names should be alphanumeric only.
+accounts = Gmail, UZH
+maxsyncaccounts = 5
+
+metadata = ~/.offlineimap
+
+ui = ttyui
+
+# suppress warning when sync'ing RO folders
+ignore-readonly = no
+
+##################################################
+# Accounts
+##################################################
+
+[Account Gmail]
+
+# resync mailboxes every $autorefresh minutes
+autorefresh = 1
+
+# These settings specify the two folders that you will be syncing.
+# You'll need to have a "Repository ..." section for each one.
+localrepository = Gmail-Maildir
+remoterepository = Gmail-IMAP
+
+[Repository Gmail-Maildir]
+
+localfolders = ~/Mail/filippo.panessa@gmail.com
+type = Maildir
+
+sep = /
+
+# Translates folder names for *upload* to Gmail
+# for example, remote "[Gmail]/All Mail" becomes local "All Mail"
+nametrans = lambda foldername: ('[Gmail]/' + foldername) if foldername != 'INBOX' else foldername
+
+
+[Repository Gmail-IMAP]
+
+type = Gmail
+readonly = no
+
+remoteuser = filippo.panessa 
+remotepass = secret
+
+# Whether or not to use SSL.
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+maxconnections = 1
+holdconnectionopen = yes
+#keepalive = 60
+
+# Translates folder names for the local maildir.
+# for example, remote "[Gmail]/All Mail" becomes local "All Mail"
+nametrans = lambda foldername: re.sub('^\[Gmail\]/', '', foldername)
+
+# the realdelete option no longer exists. realdelete = yes could lead to data loss.
+# http://permalink.gmane.org/gmane.mail.imap.offlineimap.general/5265  
+realdelete = no
+
+folderfilter = lambda foldername: foldername not in [
+	'[Gmail]/All Mail',
+	'[Gmail]/Important',
+	'[Gmail]/Starred',
+	'[Gmail]/Spam',
+	'[Gmail]/lugbari',
+	'[Gmail]/Notes',
+	'[Gmail]/Team',
+	'[Gmail]/Sysadmin'
+	]
+
+
+[Account UZH]
+
+localrepository = UZH-Maildir
+remoterepository = UZH-IMAP
+
+autorefresh = 60 
+
+
+[Repository UZH-Maildir]
+
+localfolders = ~/Mail/filippo.panessa@uzh.ch
+type = Maildir
+sep = /
+
+
+[Repository UZH-IMAP]
+
+type = IMAP
+
+remoteuser = fpanessa
+remotepass = secret
+
+remotehost = imap.uzh.ch
+#remoteport = 993
+
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+
+maxconnections = 1
+holdconnectionopen = yes
+#keepalive = 60
+
+# do not sync "Spam" folders
+folderfilter = lambda foldername: foldername not in [
+                    'Spam',
+                    '.search-results'
+				  ]
+
+# Just in case we see folders with German characters in the name...
+# see: https://github.com/djcb/mu/issues/68#issuecomment-8598652
+nametrans = lambda foldername: foldername.decode('utf-7').encode('utf-8')
+
