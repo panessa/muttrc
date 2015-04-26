@@ -6,16 +6,23 @@ set from        = "filippo.panessa@gmail.com"
 set realname    = "Filippo Panessa"
 set spoolfile   = "=INBOX"
 set postponed   = "=Drafts"
+set record      = "=Sent Mail"
 set signature   = ~/.mutt/com.gmail/signature
 set sendmail    = "/usr/bin/msmtp -a com.gmail"
 
-set header_cache = ~/.mutt/com.gmail/cache/headers            
-set message_cachedir = ~/.mutt/com.gmail/cache/bodies         
-set certificate_file = ~/.mutt/com.gmail/certificates         
+set header_cache = ~/.mutt/com.gmail/cache/headers
+set message_cachedir = ~/.mutt/com.gmail/cache/bodies
+set certificate_file = ~/.mutt/com.gmail/certificates
+
+unhook folder-hook
+unmailboxes *
+
+folder-hook 'com.gmail' 'source ~/.mutt/com.gmail/muttrc'
+folder-hook 'ch.uzh' 'source ~/.mutt/ch.uzh/muttrc'
 
 folder-hook !(Bin|Spam) 'macro index,pager d "<save-message>=Bin"'
 
-lists           Team Sysadmin matplotlib-users
-subscribe       matplotlib-users
+lists           mutt-users mutt-dev
+subscribe       mutt-users mutt-dev
 
 source          ~/.mutt/com.gmail/mailboxes

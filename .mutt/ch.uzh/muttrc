@@ -6,16 +6,22 @@ set from        = "filippo.panessa@uzh.ch"
 set realname    = "Filippo Panessa"
 set spoolfile   = "=Inbox"
 set postponed   = "=Drafts"
+set record      = "=Sent"
 set signature   = ~/.mutt/ch.uzh/signature
 set sendmail    = "/usr/bin/msmtp -a ch.uzh"
 
-set header_cache = ~/.mutt/ch.uzh/cache/headers            
-set message_cachedir = ~/.mutt/ch.uzh/cache/bodies         
-set certificate_file = ~/.mutt/ch.uzh/certificates         
+set header_cache = ~/.mutt/ch.uzh/cache/headers
+set message_cachedir = ~/.mutt/ch.uzh/cache/bodies
+set certificate_file = ~/.mutt/ch.uzh/certificates
 
-folder-hook !(Trash|Spam) 'macro index,pager d "<save-message>=Trash"'
+unhook folder-hook
+unmailboxes *
 
-lists           Team Sysadmin matplotlib-users
-subscribe       matplotlib-users
+folder-hook 'com.gmail' 'source ~/.mutt/com.gmail/muttrc'
+folder-hook 'ch.uzh' 'source ~/.mutt/ch.uzh/muttrc'
+
+folder-hook !(Trash) 'macro index,pager d "<save-message>=Trash"'
+
+lists           Team Sysadmin
 
 source          ~/.mutt/ch.uzh/mailboxes

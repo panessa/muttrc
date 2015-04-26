@@ -57,6 +57,7 @@ set beep_new                # beep on new messages in the mailboxes
 ###
  
 set editor              = "vim -c 'set tw=70 et' '+/^$' "
+#set editor="emacs -nw --no-init-file"
 set edit_headers            # put headers in editor when composing messages
                             # additioally I have a some setting in vim for
                             # my convenience (lazyness):
@@ -82,37 +83,38 @@ set pager_context=5  # Retain 5 lines of previous page when scrolling.
 set status_on_top    # Status bar on top.
 push <show-version>  # Shows mutt version at startup
 
-set crypt_autosign=no
+set crypt_autosign = no
 set pgp_auto_decode = yes
-set pgp_autoinline = no
-set pgp_check_exit = yes
-set pgp_clearsign_command = "gpg --no-verbose --batch --output - --passphrase-fd 0 --armor --textmode --clearsign %?a?-u %a? %f"
-set pgp_decode_command = "gpg %?p?--passphrase-fd 0? --no-verbose --batch --output - %f"
-set pgp_decrypt_command = "gpg --passphrase-fd 0 --no-verbose --batch --output - %f"
-set pgp_encrypt_only_command = "pgpewrap gpg -v --batch --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
-set pgp_encrypt_sign_command = "pgpewrap gpg --passphrase-fd 0 -v --batch --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
-set pgp_entry_format = '%4n %t%f %4l/0x%k %-4a %2c %u'
+#set pgp_autoinline = no
+#set pgp_check_exit = yes
+#set pgp_entry_format = '%4n %t%f %4l/0x%k %-4a %2c %u'
+#set pgp_getkeys_command = "gpg --recv-keys %r > /dev/null 2>&1"
+#set pgp_ignore_subkeys = yes
+#set pgp_long_ids = no
+#set pgp_mime_auto = ask-yes
+#set pgp_replyinline = no
+#set pgp_retainable_sigs = no
+#set pgp_show_unusable = yes
+#set pgp_sign_as = 0xC37BC25B
+#set pgp_sort_keys = 'address'
+#set pgp_strict_enc = yes
+#set pgp_timeout = '9999'
+#set pgp_use_gpg_agent = no
+
+set pgp_decode_command = "gpg --status-fd=2 %?p?--passphrase-fd 0? --no-verbose --quiet --batch --output - %f"
+set pgp_verify_command = "gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
+set pgp_decrypt_command = "gpg --status-fd=2 %?p?--passphrase-fd 0? --no-verbose --quiet --batch --output - %f"
+set pgp_sign_command = "gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --detach-sign --textmode %?a?-u %a? %f"
+set pgp_clearsign_command = "gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
+set pgp_encrypt_only_command = "/usr/lib/mutt/pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+set pgp_encrypt_sign_command = "/usr/lib/mutt/pgpewrap gpg %?p?--passphrase-fd 0? --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+set pgp_import_command = "gpg --no-verbose --import %f"
 set pgp_export_command = "gpg --no-verbose --export --armor %r"
-set pgp_getkeys_command = "gpg --recv-keys %r > /dev/null 2>&1"
-set pgp_good_sign = ''
-set pgp_ignore_subkeys = yes
-set pgp_import_command = "gpg --no-verbose --import -v %f"
-set pgp_list_pubring_command = "gpg --no-verbose --batc --with-colons --list-keys %r"
-set pgp_list_secring_command = "gpg --no-verbose --batch --with-colons --list-secret-keys %r"
-set pgp_long_ids = no
-set pgp_mime_auto = ask-yes
-set pgp_replyinline = no
-set pgp_retainable_sigs = no
-set pgp_show_unusable = yes
-set pgp_sign_as=0x59D90F4D
-set pgp_sign_command = "gpg --no-verbose --batch --output - --passphrase-fd 0 --armor --detach-sign --textmode %?a?-u %a? %f"
-set pgp_sort_keys = 'address'
-set pgp_strict_enc = yes
-set pgp_timeout = '9999'
-set pgp_use_gpg_agent = no
-set pgp_verify_command = "gpg --no-verbose --batch --output - --verify %s %f"
-set pgp_verify_key_command = "gpg --no-verbose --batch --fingerprint --check-sigs $r"
- 
+set pgp_verify_key_command = "gpg --verbose --batch --fingerprint --check-sigs %r"
+set pgp_list_pubring_command = "gpg --no-verbose --batch --quiet --with-colons --list-keys %r" 
+set pgp_list_secring_command = "gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r" 
+set pgp_good_sign = "^\\[GNUPG:\\] GOODSIG"
+
 #####################################################################
 # how mutt presents the list of the messages
 ###
@@ -229,4 +231,38 @@ ignore *                                # ignore all headers
 unignore from: to: cc: date: subject:   # show only these
 unhdr_order *                           # some distros order things by default
 hdr_order from: to: cc: date: subject:  # and in this order
+
+
+# -*-muttrc-*-
+#
+# Command formats for gpg.
+# 
+# This version uses gpg-2comp from 
+#   http://70t.de/download/gpg-2comp.tar.gz
+#
+# $Id$
+#
+# %p    The empty string when no passphrase is needed,
+#       the string "PGPPASSFD=0" if one is needed.
+#
+#       This is mostly used in conditional % sequences.
+#
+# %f    Most PGP commands operate on a single file or a file
+#       containing a message.  %f expands to this file's name.
+#
+# %s    When verifying signatures, there is another temporary file
+#       containing the detached signature.  %s expands to this
+#       file's name.
+#
+# %a    In "signing" contexts, this expands to the value of the
+#       configuration variable $pgp_sign_as.  You probably need to
+#       use this within a conditional % sequence.
+#
+# %r    In many contexts, mutt passes key IDs to pgp.  %r expands to
+#       a list of key IDs.
+
+# Note that we explicitly set the comment armor header since GnuPG, when used
+# in some localiaztion environments, generates 8bit data in that header, thereby
+# breaking PGP/MIME.
+
 

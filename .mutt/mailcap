@@ -1,4 +1,5 @@
-text/html;                      elinks -dump -force-html %s; needsterminal; copiousoutput;
+#text/html;                      elinks -dump -force-html %s; needsterminal; copiousoutput;
+text/html;                      w3m -I %{charset} -T text/html; copiousoutput;
 application/pdf;		        acroread -openInNewInstance %s; test=test -n "$DISPLAY"
 # The following Microsoft application MIME attachments are viewed from
 # the attachment menu using QuickView Plus for UNIX. 
