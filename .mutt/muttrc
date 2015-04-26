@@ -13,49 +13,49 @@ macro index <f3> '<sync-mailbox><enter-command>source ~/.mutt/ch.uzh/muttrc<ente
 # Default account
 source ~/.mutt/com.gmail/muttrc
 
-set mailcap_path	    = ~/.mutt/mailcap       # entries for filetypes
-set tmpdir	            = ~/.mutt/temp          # where to keep temp files
+set mailcap_path        = ~/.mutt/mailcap       # entries for filetypes
+set tmpdir              = ~/.mutt/temp          # where to keep temp files
 
-set use_from		    = yes
-set envelope_from	    = yes
-set rfc2047_parameters	= yes # encode =?iso-8858....?= filenames
- 
-set pipe_decode		    = yes # encode stuff to urlview (to help...)
- 
+set use_from            = yes
+set envelope_from       = yes
+set rfc2047_parameters  = yes # encode =?iso-8858....?= filenames
+
+set pipe_decode         = yes # encode stuff to urlview (to help...)
+
 #####################################################################
 # folder/mailboxes settings
 ###
- 
-set mbox_type		    = Maildir 
 
-set read_inc		    = 100
-set keep_flagged	    = yes  #don't move esc-f to $mbox from spool
+set mbox_type           = Maildir
+
+set read_inc            = 100
+set keep_flagged        = yes  #don't move esc-f to $mbox from spool
 #set reply_self=yes     #use the reply-to: even on 'self-mail' but failure..often
- 
+
 # addressbook - email - alias settings
 ###
- 
-set alias_file		    = ~/.mutt/aliases      # add the Aliases here
-set sort_alias		    = alias                # sort by alias ( or address, unsorted)
-set reverse_alias	    = yes
+
+set alias_file          = ~/.mutt/aliases      # add the Aliases here
+set sort_alias          = alias                # sort by alias ( or address, unsorted)
+set reverse_alias       = yes
 source $alias_file
 
 set query_command       = "abook --mutt-query '%s'"  # address book
- 
- 
+
+
 #####################################################################
 # how to check for new mails
 ###
- 
-set timeout		        = 5 # press artificially a key after 10 seconds
-set mail_check		    = 5 # mutt checks for new mails on every keystrokes
+
+set timeout             = 5 # press artificially a key after 10 seconds
+set mail_check          = 5 # mutt checks for new mails on every keystrokes
                             # but not more often then once in 3 seconds
 set beep_new                # beep on new messages in the mailboxes
- 
+
 #####################################################################
 # how to edit messages
 ###
- 
+
 set editor              = "vim -c 'set tw=70 et' '+/^$' "
 #set editor="emacs -nw --no-init-file"
 set edit_headers            # put headers in editor when composing messages
@@ -85,21 +85,6 @@ push <show-version>  # Shows mutt version at startup
 
 set crypt_autosign = no
 set pgp_auto_decode = yes
-#set pgp_autoinline = no
-#set pgp_check_exit = yes
-#set pgp_entry_format = '%4n %t%f %4l/0x%k %-4a %2c %u'
-#set pgp_getkeys_command = "gpg --recv-keys %r > /dev/null 2>&1"
-#set pgp_ignore_subkeys = yes
-#set pgp_long_ids = no
-#set pgp_mime_auto = ask-yes
-#set pgp_replyinline = no
-#set pgp_retainable_sigs = no
-#set pgp_show_unusable = yes
-#set pgp_sign_as = 0xC37BC25B
-#set pgp_sort_keys = 'address'
-#set pgp_strict_enc = yes
-#set pgp_timeout = '9999'
-#set pgp_use_gpg_agent = no
 
 set pgp_decode_command = "gpg --status-fd=2 %?p?--passphrase-fd 0? --no-verbose --quiet --batch --output - %f"
 set pgp_verify_command = "gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
@@ -192,7 +177,7 @@ set mime_forward=ask-no        # use MIME when forwarding mails.
 set mime_forward_rest=ask-no   # forward attachments w/o autoview from attmenu
 set pager_stop                 # stay at the current mail when page-down'ing
 
- 
+
 #####################################################################
 # bindings / macros for your convenience
 ###
@@ -207,9 +192,9 @@ bind pager CO sidebar-open
 macro index b '<enter-command>toggle sidebar_visible<enter>'
 macro pager b '<enter-command>toggle sidebar_visible<enter>'
 bind index B bounce-message
- 
+
 # message-hook '!(~g|~G) ~b"^-----BEGIN\ PGP\ (SIGNED\ )?MESSAGE"' "exec check-traditional-pgp"
- 
+
 #####################################################################
 # colors
 ###
@@ -231,38 +216,5 @@ ignore *                                # ignore all headers
 unignore from: to: cc: date: subject:   # show only these
 unhdr_order *                           # some distros order things by default
 hdr_order from: to: cc: date: subject:  # and in this order
-
-
-# -*-muttrc-*-
-#
-# Command formats for gpg.
-# 
-# This version uses gpg-2comp from 
-#   http://70t.de/download/gpg-2comp.tar.gz
-#
-# $Id$
-#
-# %p    The empty string when no passphrase is needed,
-#       the string "PGPPASSFD=0" if one is needed.
-#
-#       This is mostly used in conditional % sequences.
-#
-# %f    Most PGP commands operate on a single file or a file
-#       containing a message.  %f expands to this file's name.
-#
-# %s    When verifying signatures, there is another temporary file
-#       containing the detached signature.  %s expands to this
-#       file's name.
-#
-# %a    In "signing" contexts, this expands to the value of the
-#       configuration variable $pgp_sign_as.  You probably need to
-#       use this within a conditional % sequence.
-#
-# %r    In many contexts, mutt passes key IDs to pgp.  %r expands to
-#       a list of key IDs.
-
-# Note that we explicitly set the comment armor header since GnuPG, when used
-# in some localiaztion environments, generates 8bit data in that header, thereby
-# breaking PGP/MIME.
 
 
