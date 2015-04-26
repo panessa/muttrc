@@ -15,7 +15,6 @@ set message_cachedir = ~/.mutt/com.gmail/cache/bodies
 set certificate_file = ~/.mutt/com.gmail/certificates
 
 unhook folder-hook
-unmailboxes *
 
 folder-hook 'com.gmail' 'source ~/.mutt/com.gmail/muttrc'
 folder-hook 'ch.uzh' 'source ~/.mutt/ch.uzh/muttrc'
